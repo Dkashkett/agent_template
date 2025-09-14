@@ -1,15 +1,19 @@
-from app.config import Config
-from openai import OpenAI
+from agents import Agent, Runner
 
-config = Config()
-client = OpenAI(api_key=config.openai_api_key)
+from app.config.openai import OpenAIConfig
+
+config = OpenAIConfig()
+
+comedian_agent = Agent(
+    name="Comedian",
+    instructions="You are a comedian. Make the user laugh with a joke or witty remark.",
+)
 
 
-def process_user_message(message: str) -> str:
+async def process_user_message(message: str) -> str:
     """
     Calls the OpenAI Agent workflow and returns the response.
     """
-    response = client.agents.run(
-        agent_id=config.agent_workflow_id, input={"user_message": message}
-    )
-    return response.output_text if hasattr(response, "output_text") else str(response)
+    result = await Runner.run(comedian_agent, message)
+
+    return result.final_output

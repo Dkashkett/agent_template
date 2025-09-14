@@ -58,7 +58,6 @@ out/
 
 # Environment files
 .env
-.env.*  # e.g., .env.dev
 
 # Docker
 *.log
