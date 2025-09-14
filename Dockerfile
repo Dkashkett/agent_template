@@ -4,17 +4,12 @@ COPY . /app
 
 WORKDIR /app
 
-#RUN apt-get update && apt-get install -y --no-install-recommends \
-#    curl \
-# && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+ && rm -rf /var/lib/apt/lists/*
 
-RUN pip install uv
-
-RUN uv sync --frozen --no-cache
-#RUN uv venv .venv \
-#    && .venv/bin/uv pip install --upgrade pip \
-#    && .venv/bin/pip install uv \
-#    && .venv/bin/uv sync --frozen --no-cache
+RUN pip install --upgrade pip
+RUN pip install .
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
@@ -24,4 +19,4 @@ USER appuser
 
 EXPOSE 8000
 
-CMD ["uv", "run", "app/main.py", "--port", "80", "--host", "0.0.0.0"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
